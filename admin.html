@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ku" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>زیادکردن/دەستکاری — کتێبخانە</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>زیادکردن / دەستکاری کتێب</h1>
+          <p>هەر کەسێک دەتوانێت کتێب زیاد بکات، دەستکاری بکات، یان بسڕێتەوە ✅</p>
+        </div>
+      </div>
+      <a class="btn ghost" href="/">پەڕەی خەڵک</a>
+    </div>
+
+    <div class="panel" style="padding:14px;">
+      <div class="small">دۆخ: بێ “Admin Key” — هەر کەسێک دەستڕاگەیشتنی هەیە.</div>
+
+      <hr class="line" />
+
+      <h3 style="margin:8px 0 8px;">فۆرمی زیادکردن / دەستکاری</h3>
+
+      <form id="form" class="panel" style="padding:14px; background: rgba(255,255,255,.03);">
+        <input type="hidden" id="bookId" />
+        <div class="row">
+          <input id="title" class="input" placeholder="ناونیشان *" required />
+          <input id="author" class="input" placeholder="نووسەر *" required />
+          <input id="year" class="input" type="number" placeholder="ساڵ (بە دلخواز)" />
+          <input id="category" class="input" placeholder="پۆل (بە دلخواز)" />
+        </div>
+
+        <div style="margin-top:10px;">
+          <textarea id="description" placeholder="کورتە / وردەکاری (بە دلخواز)"></textarea>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <label class="badge">فایل کتێب (PDF/…): <input id="file" type="file" /></label>
+          <label class="badge">وێنەی بەرگ (cover): <input id="cover" type="file" accept="image/*" /></label>
+          <label class="badge"><input id="removeFile" type="checkbox" /> سڕینەوەی فایل</label>
+          <label class="badge"><input id="removeCover" type="checkbox" /> سڕینەوەی وێنەی بەرگ</label>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <button id="btnSave" class="btn" type="submit">پاشەکەوت</button>
+          <button id="btnReset" class="btn ghost" type="button">پاککردنەوەی فۆرم</button>
+        </div>
+
+        <div class="small" style="margin-top:10px;">
+          تێبینی: فایلەکان لە داتابەیس هەڵدەگیرێن (SQLite BLOB) — هیچ فۆڵدەری uploads نییە.
+        </div>
+      </form>
+
+      <hr class="line" />
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+        <h3 style="margin:8px 0;">لیستی کتێبەکان</h3>
+        <div class="row">
+          <input id="q" class="input" placeholder="گەڕان" />
+          <button id="btnRefresh" class="btn ghost" type="button">نوێکردنەوە</button>
+        </div>
+      </div>
+
+      <div style="overflow:auto; border:1px solid var(--line); border-radius:14px;">
+        <table class="table" id="table">
+          <thead>
+            <tr>
+              <th>ID</th><th>ناونیشان</th><th>نووسەر</th><th>پۆل</th><th>فایل</th><th>وێنەی بەرگ</th><th>کار</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="small" style="margin-top:10px;">
+        ئاگاداری: ئەمە بۆ تاقیکردنەوە/کارکردنی ناوخۆیی باشە. ئەگەر لەسەر ئینتەرنێت دابنێیت، هەرکەس دەتوانێت بسڕێتەوە.
+      </div>
+    </div>
+  </div>
+
+  <script src="./admin.js"></script>
+</body>
+</html>

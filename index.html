@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ku" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>کتێبخانە</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>کتێبخانەی مۆدێرن</h1>
+          <p>بینینی کتێبەکان + کردنەوە/داگرتنی فایل (PDF) — فوول ستاک</p>
+        </div>
+      </div>
+      <a class="btn ghost" href="/admin.html">پەڕەی ئەدمین</a>
+    </div>
+
+    <div class="panel">
+      <div class="controls">
+        <input id="q" class="input" placeholder="گەڕان: ناونیشان / نووسەر / پۆل" />
+        <input id="category" class="input" placeholder="پۆل (Category) — بە دلخواز" />
+        <button id="btnSearch" class="btn">گەڕان</button>
+        <button id="btnClear" class="btn ghost">پاککردنەوە</button>
+      </div>
+
+      <div id="grid" class="grid"></div>
+
+      <div class="footerhint">
+        تێبینی: فایلەکان لە داتابەیس هەڵگیراون (BLOB) — هیچ فۆڵدەری uploads نییە.
+      </div>
+    </div>
+  </div>
+
+  <!-- مۆدال -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="box">
+      <header>
+        <h2 id="mTitle">کتێب</h2>
+        <div class="row">
+          <a id="mDownload" class="btn" href="#" target="_blank" rel="noreferrer">کردنەوە / داگرتن</a>
+          <button id="mClose" class="btn ghost">داخستن</button>
+        </div>
+      </header>
+      <div class="content">
+        <div>
+          <div class="preview"><img id="mCover" alt="وێنەی بەرگ" /></div>
+          <div class="small" id="mMeta" style="margin-top:10px;"></div>
+        </div>
+        <div>
+          <div class="small" id="mDesc"></div>
+          <hr class="line" />
+          <div class="row">
+            <span id="mBadge1" class="badge"></span>
+            <span id="mBadge2" class="badge"></span>
+          </div>
+          <div class="small" style="margin-top:10px;">
+            ئەگەر فایل نییە، ئەدمین دەتوانێت فایل زیاد بکات.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
