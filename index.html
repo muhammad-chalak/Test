@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ckb" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>تەفسیری نامی — وێب رێدەری پرۆفیشنال</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <a class="skip" href="#viewer">چوون بۆ خوێندنی کتێب</a>
+
+  <header class="topbar">
+    <button class="iconbtn" id="btnMenu" aria-label="کردنەوەی مێنیو">
+      <span class="i i-menu"></span>
+    </button>
+
+    <div class="brand">
+      <div class="brandTitle">تەفسیری نامی</div>
+      <div class="brandSub">وێب رێدەری پرێمیۆم — PDF + گەڕان + دۆزینەوە</div>
+    </div>
+
+    <div class="topActions">
+      <button class="pill" id="btnSearch" title="گەڕان (Ctrl/⌘+K)">
+        <span class="i i-search"></span><span class="hideSm">گەڕان</span>
+      </button>
+
+      <button class="iconbtn" id="btnTheme" aria-label="گۆڕینی ڕووناکی">
+        <span class="i i-moon"></span>
+      </button>
+
+      <button class="iconbtn" id="btnSettings" aria-label="ڕێکخستنەکان">
+        <span class="i i-sliders"></span>
+      </button>
+    </div>
+  </header>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawerHeader">
+      <div class="drawerTitle">ناوەڕۆک</div>
+      <button class="iconbtn" id="btnCloseDrawer" aria-label="داخستن">
+        <span class="i i-x"></span>
+      </button>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab isActive" data-tab="toc">پێڕست</button>
+      <button class="tab" data-tab="bookmarks">نیشانەکان</button>
+      <button class="tab" data-tab="notes">تێبینی</button>
+    </nav>
+
+    <section class="panel isActive" id="panel-toc">
+      <div class="panelHint">
+        ئەگەر لە PDF ـدا «Outline/Bookmarks» هەبێت، لێرە دەردەکەوێت.
+      </div>
+      <div class="toc" id="toc"></div>
+    </section>
+
+    <section class="panel" id="panel-bookmarks">
+      <div class="panelHint">نیشانەکانت لێرە دەهێڵدرێن (لەسەر ئامێرەکەت، بێ سێرڤەر).</div>
+      <div class="list" id="bookmarkList"></div>
+      <button class="cta" id="btnExport">هەناردەکردنی داتاکان (JSON)</button>
+      <label class="cta ghost">
+        هاوردەکردن (Import) <input id="importFile" type="file" accept="application/json" hidden>
+      </label>
+      <button class="cta danger" id="btnReset">سڕینەوەی هەموو داتاکان</button>
+    </section>
+
+    <section class="panel" id="panel-notes">
+      <div class="panelHint">تێبینی بۆ هەر پەڕەیەک — خودکار پاشەکەوت دەبێت.</div>
+      <div class="noteBox">
+        <div class="noteHead">
+          <div>پەڕەی ئێستا: <span id="notePage">—</span></div>
+          <button class="pill" id="btnBookmark">
+            <span class="i i-bookmark"></span> نیشانە بکە
+          </button>
+        </div>
+        <textarea id="noteText" placeholder="لێرە تێبینی بنووسە…"></textarea>
+        <div class="noteFoot">
+          <div class="muted" id="noteStatus">—</div>
+          <button class="pill ghost" id="btnClearNote">سڕینەوەی تێبینی</button>
+        </div>
+      </div>
+      <div class="list" id="noteList"></div>
+    </section>
+  </aside>
+
+  <main class="main">
+    <section class="viewerShell" id="viewer">
+      <div class="toolbar">
+        <button class="iconbtn" id="btnPrev" aria-label="پەڕەی پێشوو">
+          <span class="i i-left"></span>
+        </button>
+
+        <div class="pageCtl">
+          <input id="pageNumber" inputmode="numeric" pattern="[0-9]*" aria-label="ژمارەی پەڕە" />
+          <span class="muted">/</span>
+          <span id="pageCount" class="muted">—</span>
+        </div>
+
+        <button class="iconbtn" id="btnNext" aria-label="پەڕەی داهاتوو">
+          <span class="i i-right"></span>
+        </button>
+
+        <div class="sep"></div>
+
+        <button class="pill ghost" id="btnFit">
+          <span class="i i-fit"></span><span class="hideSm">پێوانە</span>
+        </button>
+
+        <div class="zoomCtl">
+          <button class="iconbtn" id="btnZoomOut" aria-label="کەمکردنەوەی زووم">
+            <span class="i i-minus"></span>
+          </button>
+          <span class="muted" id="zoomLabel">100%</span>
+          <button class="iconbtn" id="btnZoomIn" aria-label="زیادکردنی زووم">
+            <span class="i i-plus"></span>
+          </button>
+        </div>
+
+        <div class="sep"></div>
+
+        <button class="pill" id="btnShare">
+          <span class="i i-share"></span><span class="hideSm">هاوبەش</span>
+        </button>
+
+        <a class="pill ghost" id="btnDownload" href="assets/tafsir-nami.pdf" download>
+          <span class="i i-download"></span><span class="hideSm">داگرتن</span>
+        </a>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progressBar" id="progressBar"></div>
+      </div>
+
+      <div class="pdfStage" aria-live="polite">
+        <div class="canvasWrap">
+          <canvas id="pdfCanvas"></canvas>
+          <div id="textLayer" class="textLayer" aria-hidden="true"></div>
+        </div>
+
+        <div class="status" id="status">
+          <div class="spinner"></div>
+          <div>
+            <div class="statusTitle">بارکردن…</div>
+            <div class="statusSub" id="statusSub">پەڕەکان ئامادە دەکرێن</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="foot">
+        <span class="muted">کورتەکلیلەکان: ←/→ پەڕە • Ctrl/⌘+K گەڕان • B نیشانە • D ڕووناک/تاریک</span>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Search Modal -->
+  <dialog class="modal" id="searchModal">
+    <form method="dialog" class="modalCard" id="searchForm">
+      <div class="modalHead">
+        <div class="modalTitle">گەڕان لە ناو تەفسیر</div>
+        <button class="iconbtn" value="cancel" aria-label="داخستن"><span class="i i-x"></span></button>
+      </div>
+
+      <div class="searchRow">
+        <input id="searchInput" type="search" placeholder="وشە/دەق بنووسە… (نم: ﺍﻟﻠﻪ، ایمان،...)"/>
+        <button class="pill" id="btnDoSearch" type="button">
+          <span class="i i-search"></span> گەڕان
+        </button>
+      </div>
+
+      <div class="searchMeta">
+        <div class="muted" id="searchStatus">—</div>
+        <button class="pill ghost" id="btnBuildIndex" type="button">
+          بنیاتنانی ئیندێکس (خێراتر دەکات)
+        </button>
+      </div>
+
+      <div class="results" id="searchResults"></div>
+
+      <div class="modalFoot">
+        <div class="muted">تێبینی: گەڕان لەسەر ئامێرەکەت دەکرێت (IndexedDB)، هیچ شتێک نەنێردرێت.</div>
+        <button class="pill ghost" value="cancel">داخستن</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Settings Modal -->
+  <dialog class="modal" id="settingsModal">
+    <form method="dialog" class="modalCard">
+      <div class="modalHead">
+        <div class="modalTitle">ڕێکخستنەکان</div>
+        <button class="iconbtn" value="cancel" aria-label="داخستن"><span class="i i-x"></span></button>
+      </div>
+
+      <div class="settings">
+        <div class="setting">
+          <div>
+            <div class="settingTitle">ڕووناکی</div>
+            <div class="muted">تاریک/ڕووناک + سێپیا بۆ خوێندن</div>
+          </div>
+          <div class="seg">
+            <button type="button" class="segBtn" data-theme="dark">تاریک</button>
+            <button type="button" class="segBtn" data-theme="light">ڕووناک</button>
+            <button type="button" class="segBtn" data-theme="sepia">سێپیا</button>
+          </div>
+        </div>
+
+        <div class="setting">
+          <div>
+            <div class="settingTitle">قەبارەی خوێندن</div>
+            <div class="muted">گۆڕینی زووم وەک بنەڕەتی</div>
+          </div>
+          <input type="range" id="defaultZoom" min="60" max="200" value="100" />
+        </div>
+
+        <div class="setting">
+          <div>
+            <div class="settingTitle">پێشەنگ (Preload)</div>
+            <div class="muted">کەمێک شت پێش‌بار بکات بۆ گەڕان و سکرۆڵ (ئارامتر)</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="preloadToggle" />
+            <span></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modalFoot">
+        <div class="muted">PWA: دەتوانیت لە Safari → Share → “Add to Home Screen” زیاد بکەیت.</div>
+        <button class="pill ghost" value="cancel">داخستن</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- PDF.js (CDN). If you want full offline, download pdfjs-dist and replace with local files. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    // Worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>
